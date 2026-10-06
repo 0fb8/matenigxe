@@ -1,0 +1,21 @@
+---
+import Base from '../../layouts/Base.astro';
+import { getNotes, url, formatDate } from '../../lib';
+
+export async function getStaticPaths() {
+  const notes = await getNotes();
+  const tags = [...new Set(notes.flatMap((n) => n.data.tags))];
+  return tags.map((tag) => ({ params: { tag }, props: { notes: notes.filter((n) => n.data.tags.includes(tag)) } }));
+}
+
+const { tag } = Astro.params;
+const { notes } = Astro.props;
+---
+<Base title={`#${tag}`}>
+  <h1>#{tag}</h1>
+  <ul class="list">
+    {notes.map((n) => (
+      <li><time>{formatDate(n.data.date)}</time><a href={url(`/notes/${n.id}/`)}>{n.data.title}</a></li>
+    ))}
+  </ul>
+</Base>

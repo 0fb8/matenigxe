@@ -1,0 +1,23 @@
+---
+import { render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import { getNotes, url, formatDate, readingMinutes } from '../../lib';
+
+export async function getStaticPaths() {
+  const notes = await getNotes();
+  return notes.map((note) => ({ params: { id: note.id }, props: { note } }));
+}
+
+const { note } = Astro.props;
+const { Content } = await render(note);
+---
+<Base title={note.data.title}>
+  <article data-pagefind-body>
+    <h1>{note.data.title}</h1>
+    <p class="meta">
+      <time>{formatDate(note.data.date)}</time> · 約{readingMinutes(note.body)}分
+      {note.data.tags.map((t) => <a class="tag" href={url(`/tags/${t}/`)} data-pagefind-filter="tag">#{t}</a>)}
+    </p>
+    <Content />
+  </article>
+</Base>

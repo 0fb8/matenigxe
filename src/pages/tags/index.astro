@@ -1,0 +1,13 @@
+---
+import Base from '../../layouts/Base.astro';
+import { getNotes, url } from '../../lib';
+const counts = new Map<string, number>();
+for (const n of await getNotes()) for (const t of n.data.tags) counts.set(t, (counts.get(t) ?? 0) + 1);
+const tags = [...counts].sort((a, b) => b[1] - a[1]);
+---
+<Base title="タグ">
+  <h1>タグ</h1>
+  <ul class="list">
+    {tags.map(([t, c]) => <li><a href={url(`/tags/${t}/`)}>#{t}</a> <span class="meta">({c})</span></li>)}
+  </ul>
+</Base>

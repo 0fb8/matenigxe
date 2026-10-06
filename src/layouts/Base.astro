@@ -1,0 +1,65 @@
+---
+import { url } from '../lib';
+import site from '../../site.config';
+interface Props { title?: string }
+const { title } = Astro.props;
+const siteName = site.name;
+---
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title ? `${title} | ${siteName}` : siteName}</title>
+    <meta name="description" content={site.description} />
+    <link rel="icon" href={url('/favicon.svg')} type="image/svg+xml" />
+    <link rel="stylesheet" href={url('/pagefind/pagefind-ui.css')} />
+  </head>
+  <body>
+    <header>
+      <a class="site" href={url('/')}>{siteName}</a>
+      <nav><a href={url('/tags/')}>タグ</a></nav>
+    </header>
+    <div id="search"></div>
+    <main><slot /></main>
+    <script is:inline define:vars={{ base: url('/') }}>
+      const s = document.createElement('script');
+      s.src = base + 'pagefind/pagefind-ui.js';
+      s.onload = () => new PagefindUI({ element: '#search', showImages: false, translations: { placeholder: '検索' } });
+      document.head.append(s);
+    </script>
+  </body>
+</html>
+
+<style is:global>
+  :root {
+    --bg: #fdfdfc; --fg: #222; --muted: #6b6b6b; --accent: #2563eb; --code-bg: #f3f3f1; --border: #e5e5e2;
+    color-scheme: light dark;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #18181b; --fg: #e4e4e7; --muted: #a1a1aa; --accent: #60a5fa; --code-bg: #27272a; --border: #3f3f46; }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0 auto; max-width: 42rem; padding: 1.5rem 1rem 4rem;
+    background: var(--bg); color: var(--fg);
+    font-family: system-ui, -apple-system, "Hiragino Sans", "Noto Sans JP", sans-serif;
+    line-height: 1.8;
+  }
+  a { color: var(--accent); }
+  header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 1rem; }
+  header .site { font-weight: 700; font-size: 1.2rem; color: var(--fg); text-decoration: none; }
+  #search { margin-bottom: 2rem; --pagefind-ui-scale: .85; --pagefind-ui-primary: var(--accent);
+    --pagefind-ui-text: var(--fg); --pagefind-ui-background: var(--bg); --pagefind-ui-border: var(--border); --pagefind-ui-tag: var(--code-bg); }
+  h1 { font-size: 1.6rem; line-height: 1.4; margin: 0 0 .5rem; }
+  .meta { color: var(--muted); font-size: .85rem; }
+  .tag { display: inline-block; margin-right: .4rem; font-size: .8rem; }
+  ul.list { list-style: none; padding: 0; }
+  ul.list li { padding: .5rem 0; border-bottom: 1px solid var(--border); }
+  ul.list time { color: var(--muted); font-size: .85rem; margin-right: .75rem; font-variant-numeric: tabular-nums; }
+  code { background: var(--code-bg); padding: .1em .35em; border-radius: 4px; font-size: .9em; }
+  pre { padding: 1rem; border-radius: 6px; overflow-x: auto; line-height: 1.5; }
+  pre code { background: none; padding: 0; }
+  img { max-width: 100%; }
+  blockquote { margin: 1rem 0; padding-left: 1rem; border-left: 3px solid var(--border); color: var(--muted); }
+</style>
