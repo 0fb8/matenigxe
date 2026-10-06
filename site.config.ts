@@ -1,5 +1,5 @@
 // サイト全体の設定。名前などはここだけ変えれば全ページに反映される
 export default {
-  name: 'まてにぐぜ',
-  description: '勉強中に知った小ネタを書き溜めるメモ',
+  name: "matenigxe",
+  description: "見かけた小ネタを書き溜めるメモ",
 };
