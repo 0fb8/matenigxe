@@ -1,0 +1,38 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { url, formatDate } from '../lib';
+
+interface Props {
+  notes: CollectionEntry<'notes'>[];
+  // タグページで表示中のタグ（強調表示する）
+  currentTag?: string;
+}
+const { notes, currentTag } = Astro.props;
+---
+<ul class="list">
+  {notes.map((n) => (
+    <li>
+      <time>{formatDate(n.data.date)}</time>
+      <a href={url(`/notes/${n.id}/`)}>{n.data.title}</a>
+      {n.data.tags.length > 0 && (
+        <span class="tags">
+          {n.data.tags.map((t) => (
+            <a class:list={['tag', { current: t === currentTag }]} href={url(`/tags/${t}/`)}>#{t}</a>
+          ))}
+        </span>
+      )}
+    </li>
+  ))}
+</ul>
+
+<style>
+  li { display: flex; flex-wrap: wrap; align-items: baseline; column-gap: .75rem; }
+  time { margin-right: 0 !important; }
+  .tags { display: inline-flex; flex-wrap: wrap; gap: .4rem; }
+  .tag {
+    margin: 0; padding: 0 .45rem; border-radius: 999px; background: var(--code-bg);
+    color: var(--muted); text-decoration: none; line-height: 1.6;
+  }
+  .tag:hover { color: var(--accent); }
+  .tag.current { color: var(--accent); font-weight: 600; }
+</style>

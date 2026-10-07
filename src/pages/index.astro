@@ -1,16 +1,10 @@
 ---
 import Base from '../layouts/Base.astro';
-import { getNotes, url, formatDate } from '../lib';
+import NoteList from '../components/NoteList.astro';
+import { getNotes } from '../lib';
 const notes = await getNotes();
 ---
 <Base>
   <p class="meta">{notes.length} 件のメモ</p>
-  <ul class="list">
-    {notes.map((n) => (
-      <li>
-        <time>{formatDate(n.data.date)}</time>
-        <a href={url(`/notes/${n.id}/`)}>{n.data.title}</a>
-      </li>
-    ))}
-  </ul>
+  <NoteList notes={notes} />
 </Base>

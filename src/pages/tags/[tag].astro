@@ -1,6 +1,7 @@
 ---
 import Base from '../../layouts/Base.astro';
-import { getNotes, url, formatDate } from '../../lib';
+import NoteList from '../../components/NoteList.astro';
+import { getNotes } from '../../lib';
 
 export async function getStaticPaths() {
   const notes = await getNotes();
@@ -13,9 +14,5 @@ const { notes } = Astro.props;
 ---
 <Base title={`#${tag}`}>
   <h1>#{tag}</h1>
-  <ul class="list">
-    {notes.map((n) => (
-      <li><time>{formatDate(n.data.date)}</time><a href={url(`/notes/${n.id}/`)}>{n.data.title}</a></li>
-    ))}
-  </ul>
+  <NoteList notes={notes} currentTag={tag} />
 </Base>
