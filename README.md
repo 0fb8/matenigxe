@@ -6,6 +6,10 @@
 
 ## 記事を書く
 
+このリポジトリで Claude Code を起動し、`/note <知ったこと>` と打つと、対話のうえ記事を作って commit まで行う（push は手動）。手順とルールは `.claude/skills/note/SKILL.md`。
+
+手で書く場合:
+
 ```sh
 npm run new -- git-stash "git stash の使い方"   # src/content/notes/git-stash.md ができる
 npm run dev                                     # http://localhost:4321 でプレビュー
