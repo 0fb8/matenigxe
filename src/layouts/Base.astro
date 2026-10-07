@@ -14,11 +14,23 @@ const siteName = site.name;
     <meta name="description" content={site.description} />
     <link rel="icon" href={url('/favicon.svg')} type="image/svg+xml" />
     <link rel="stylesheet" href={url('/pagefind/pagefind-ui.css')} />
+    <script is:inline>
+      // 保存済みのテーマを描画前に適用して、ちらつきを防ぐ
+      try {
+        const t = localStorage.getItem('theme');
+        if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t;
+      } catch {}
+    </script>
   </head>
   <body>
     <header>
       <a class="site" href={url('/')}>{siteName}</a>
-      <nav><a href={url('/tags/')}>タグ</a></nav>
+      <nav>
+        <a href={url('/tags/')}>タグ</a>
+        <button id="theme-toggle" type="button" aria-label="ライト/ダークを切り替え" title="ライト/ダークを切り替え">
+          <span class="icon-sun" aria-hidden="true">☀</span><span class="icon-moon" aria-hidden="true">☾</span>
+        </button>
+      </nav>
     </header>
     <div id="search"></div>
     <main><slot /></main>
@@ -27,17 +39,35 @@ const siteName = site.name;
       s.src = base + 'pagefind/pagefind-ui.js';
       s.onload = () => new PagefindUI({ element: '#search', showImages: false, translations: { placeholder: '検索' } });
       document.head.append(s);
+
+      document.getElementById('theme-toggle').addEventListener('click', () => {
+        const root = document.documentElement;
+        const isDark = root.dataset.theme
+          ? root.dataset.theme === 'dark'
+          : matchMedia('(prefers-color-scheme: dark)').matches;
+        const next = isDark ? 'light' : 'dark';
+        root.dataset.theme = next;
+        try { localStorage.setItem('theme', next); } catch {}
+      });
     </script>
   </body>
 </html>
 
 <style is:global>
+  /* 初期表示は OS の設定に従い、ボタンで選んだテーマ（data-theme）があればそちらを優先 */
   :root {
     --bg: #fdfdfc; --fg: #222; --muted: #6b6b6b; --accent: #2563eb; --code-bg: #f3f3f1; --border: #e5e5e2;
-    color-scheme: light dark;
+    color-scheme: light;
   }
   @media (prefers-color-scheme: dark) {
-    :root { --bg: #18181b; --fg: #e4e4e7; --muted: #a1a1aa; --accent: #60a5fa; --code-bg: #27272a; --border: #3f3f46; }
+    :root:not([data-theme="light"]) {
+      --bg: #18181b; --fg: #e4e4e7; --muted: #a1a1aa; --accent: #60a5fa; --code-bg: #27272a; --border: #3f3f46;
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #18181b; --fg: #e4e4e7; --muted: #a1a1aa; --accent: #60a5fa; --code-bg: #27272a; --border: #3f3f46;
+    color-scheme: dark;
   }
   * { box-sizing: border-box; }
   body {
@@ -47,7 +77,21 @@ const siteName = site.name;
     line-height: 1.8;
   }
   a { color: var(--accent); }
-  header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 1rem; }
+  header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
+  header nav { display: flex; align-items: center; gap: 1rem; }
+  #theme-toggle {
+    background: none; border: 1px solid var(--border); border-radius: 6px; color: var(--fg);
+    width: 2rem; height: 2rem; padding: 0; font-size: 1rem; line-height: 1; cursor: pointer;
+  }
+  #theme-toggle:hover { border-color: var(--muted); }
+  /* 今のテーマと逆側のアイコンを表示（押すとそちらに切り替わる） */
+  .icon-sun { display: none; }
+  :root[data-theme="dark"] .icon-sun { display: inline; }
+  :root[data-theme="dark"] .icon-moon { display: none; }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) .icon-sun { display: inline; }
+    :root:not([data-theme="light"]) .icon-moon { display: none; }
+  }
   header .site { font-weight: 700; font-size: 1.2rem; color: var(--fg); text-decoration: none; }
   #search { margin-bottom: 2rem; --pagefind-ui-scale: .85; --pagefind-ui-primary: var(--accent);
     --pagefind-ui-text: var(--fg); --pagefind-ui-background: var(--bg); --pagefind-ui-border: var(--border); --pagefind-ui-tag: var(--code-bg); }
@@ -60,6 +104,17 @@ const siteName = site.name;
   code { background: var(--code-bg); padding: .1em .35em; border-radius: 4px; font-size: .9em; }
   pre { padding: 1rem; border-radius: 6px; overflow-x: auto; line-height: 1.5; }
   pre code { background: none; padding: 0; }
+  pre.astro-code { border: 1px solid var(--border); }
+  :root[data-theme="dark"] .astro-code,
+  :root[data-theme="dark"] .astro-code span {
+    color: var(--shiki-dark) !important; background-color: var(--shiki-dark-bg) !important;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) .astro-code,
+    :root:not([data-theme="light"]) .astro-code span {
+      color: var(--shiki-dark) !important; background-color: var(--shiki-dark-bg) !important;
+    }
+  }
   img { max-width: 100%; }
   blockquote { margin: 1rem 0; padding-left: 1rem; border-left: 3px solid var(--border); color: var(--muted); }
 </style>
