@@ -8,21 +8,29 @@ tags: [math, physics]
 
 目から地球に接線を引くと、地球の中心・目・接点の3点は、接点で直角になる直角三角形をつくる。斜辺は中心から目までの $R+h$、隣辺は半径 $R$ なので、中心での角を $\theta$ とすると
 
-$$\cos\theta = \frac{R}{R+h}$$
+$$
+\cos\theta = \frac{R}{R+h}
+$$
 
 地平線までの地表に沿った距離は弧の長さ $R\theta$ だから、$R\arccos\frac{R}{R+h}$ と求まる。
 
 これを近似したいが、$\arccos$ をそのままテイラー展開するのは面倒。そこで $\varepsilon := h/R$ とおき、$\cos\theta = \frac{1}{1+\varepsilon}$ の両辺をそれぞれ展開して主要項で打ち切る。
 
-$$1 - \frac{\theta^2}{2} \approx 1 - \varepsilon$$
+$$
+1 - \frac{\theta^2}{2} \approx 1 - \varepsilon
+$$
 
 これを解くと $\theta \approx \sqrt{2\varepsilon}$ なので、距離は
 
-$$R\theta \approx R\sqrt{2\varepsilon} = \sqrt{2Rh}$$
+$$
+R\theta \approx R\sqrt{2\varepsilon} = \sqrt{2Rh}
+$$
 
 $R \approx 6371$ km を入れるときは単位をそろえる。$h$ をメートルのまま使うなら $R = 6.371 \times 10^6$ m として
 
-$$\sqrt{2Rh} \approx \sqrt{1.27 \times 10^7}\,\sqrt{h}\ \text{m} \approx 3.57\sqrt{h}\ \text{km}$$
+$$
+\sqrt{2Rh} \approx \sqrt{1.27 \times 10^7}\,\sqrt{h}\ \text{m} \approx 3.57\sqrt{h}\ \text{km}
+$$
 
 | 目の高さ $h$ | 地平線までの距離 |
 | --- | --- |
