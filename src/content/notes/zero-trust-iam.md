@@ -1,7 +1,7 @@
 ---
 title: "IAM は「誰か」を確かめる認証と「何ができるか」を決める認可の基盤で、ゼロトラストの最も基本となる構成要素"
 date: 2026-10-21
-tags: [security]
+tags: [security, zero-trust]
 ---
 
 IAM（Identity and Access Management）は、利用者の ID を管理し、認証と認可をまとめて行う基盤。ゼロトラストを実現するうえで、最も基本となる構成要素の1つとされる。

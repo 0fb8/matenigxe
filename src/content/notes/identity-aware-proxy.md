@@ -1,7 +1,7 @@
 ---
 title: "IAP は IAM と連携してアプリごとにアクセスを判断するプロキシで、VPN の内側なら全部許すやり方と違い横移動されにくい"
 date: 2026-10-21
-tags: [security, vpn]
+tags: [security, vpn, zero-trust]
 ---
 
 IAP（Identity-Aware Proxy）は、利用者と社内のアプリの間の通信経路に置かれるプロキシ。IAM と連携して「誰が」「どのアプリに」アクセスしようとしているかを確かめ、アプリごとに通すかどうかを決める。

@@ -1,7 +1,7 @@
 ---
 title: "MDM は組織の端末を管理して安全でない端末を使わせない仕組みで、私物端末では MAM で業務用のアプリとデータだけを分けて管理する"
 date: 2026-10-25
-tags: [security]
+tags: [security, zero-trust]
 ---
 
 MDM（Mobile Device Management）は、組織で使う端末を一元的に管理し、状態を把握して設定を強制する仕組み。利用者が本人であっても、安全でない端末からのアクセスは防ぎたいというゼロトラストの考え方を支える。私物の端末を業務に使う BYOD では、端末全体ではなく業務用のアプリとデータだけを管理する MAM（Mobile Application Management）が使われる。
