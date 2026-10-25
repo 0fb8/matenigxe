@@ -1,7 +1,7 @@
 ---
 title: "ICMP は L3 と呼ばれるが、Ethernet に直接は乗らず IP の上（プロトコル番号 1）に乗る"
 date: 2026-10-08
-tags: [network, icmp]
+tags: [network, icmp, ip]
 ---
 
 ICMP はネットワーク層（L3）のプロトコルとして紹介されることが多い。けれども、パケットの中では IP と横並びではなく、IP の上に乗っている。Ethernet が運ぶのはあくまで IP で、ICMP はその IP のデータ部分に入る。
