@@ -1,5 +1,5 @@
 ---
-title: "位数 n の有限群には、n の素因数 p ごとに位数 p の元がある（Cauchy の定理）"
+title: "位数 $n$ の有限群には、$n$ の素因数 $p$ ごとに位数 $p$ の元がある（Cauchy の定理）"
 date: 2026-10-31
 tags: [math, algebra]
 ---

@@ -56,3 +56,16 @@ export const inlineHtml = (text: string) =>
           : escapeHtml(part.replace(/\*\*|__/g, '')),
     )
     .join('');
+
+// タイトルを HTML にする（$...$ の数式を KaTeX で表示）
+export const titleHtml = (title: string) => inlineHtml(title);
+
+// タイトルの数式を、ブラウザのタブや検索結果に出せる文字だけの形にする
+export const plainTitle = (title: string) =>
+  title.replace(/\$([^$]+)\$/g, (_, tex: string) =>
+    tex
+      .replace(/\\mathfrak\{([a-z])\}/g, (_m, c: string) => String.fromCodePoint(0x1d51e + c.charCodeAt(0) - 97))
+      .replace(/\\sqrt\{([^{}]+)\}/g, (_m, x: string) => (x.length === 1 ? `√${x}` : `√(${x})`))
+      .replace(/\\[a-zA-Z]+\s?/g, '')
+      .replace(/[{}]/g, ''),
+  );

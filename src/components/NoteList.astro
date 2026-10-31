@@ -1,6 +1,6 @@
 ---
 import type { CollectionEntry } from 'astro:content';
-import { url, formatDate, readingMinutes } from '../lib';
+import { url, formatDate, readingMinutes, titleHtml } from '../lib';
 
 interface Props {
   notes: CollectionEntry<'notes'>[];
@@ -13,7 +13,7 @@ const { notes, currentTag } = Astro.props;
   {notes.map((n) => (
     <li>
       <time>{formatDate(n.data.date)}</time>
-      <a href={url(`/notes/${n.id}/`)}>{n.data.title}</a>
+      <a href={url(`/notes/${n.id}/`)} set:html={titleHtml(n.data.title)} />
       {n.data.long && <span class="long">長編 · 約{readingMinutes(n.body)}分</span>}
       {n.data.tags.length > 0 && (
         <span class="tags">

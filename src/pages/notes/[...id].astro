@@ -1,7 +1,7 @@
 ---
 import { render } from 'astro:content';
 import Base from '../../layouts/Base.astro';
-import { getNotes, url, formatDate, readingMinutes, headingLines, inlineHtml } from '../../lib';
+import { getNotes, url, formatDate, readingMinutes, headingLines, inlineHtml, titleHtml, plainTitle } from '../../lib';
 
 export async function getStaticPaths() {
   const notes = await getNotes();
@@ -17,9 +17,10 @@ const toc = note.data.long
   ? headings.map((h, i) => ({ ...h, html: lines.length === headings.length ? inlineHtml(lines[i]) : h.text })).filter((h) => h.depth <= 3)
   : [];
 ---
-<Base title={note.data.title}>
+<Base title={plainTitle(note.data.title)}>
   <article data-pagefind-body>
-    <h1>{note.data.title}</h1>
+    <meta data-pagefind-meta="title[content]" content={plainTitle(note.data.title)} />
+    <h1 set:html={titleHtml(note.data.title)} />
     <p class="meta">
       <time>{formatDate(note.data.date)}</time> · 約{readingMinutes(note.body)}分
       {note.data.tags.map((t) => <a class="tag" href={url(`/tags/${t}/`)} data-pagefind-filter="tag">#{t}</a>)}
