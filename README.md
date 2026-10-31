@@ -12,6 +12,7 @@
 
 ```sh
 npm run new -- git-stash "git stash の使い方"   # src/content/notes/git-stash.md ができる
+npm run new -- --long group-theory "群論入門"     # long: true 付きで作る
 npm run dev                                     # http://localhost:4321 でプレビュー
 ```
 
@@ -23,6 +24,7 @@ frontmatter:
 | `date`  | 日付（一覧はこの新しい順）             |
 | `tags`  | `[git, linux]` のように               |
 | `draft` | `true` にすると本番ビルドから除外      |
+| `long`  | `true` にすると長めの記事として扱う（トップページの別枠に並べ、一覧に印を付け、記事ページに `##`・`###` の見出しから目次を付ける） |
 
 数式は LaTeX 記法で書ける（文中は `$...$`、別の行は `$$...$$`。ビルド時に KaTeX で表示）。数式ではない `$` は `\$` と書く。
 

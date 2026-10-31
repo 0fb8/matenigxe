@@ -1,7 +1,7 @@
 ---
 import { render } from 'astro:content';
 import Base from '../../layouts/Base.astro';
-import { getNotes, url, formatDate, readingMinutes } from '../../lib';
+import { getNotes, url, formatDate, readingMinutes, headingLines, inlineHtml } from '../../lib';
 
 export async function getStaticPaths() {
   const notes = await getNotes();
@@ -9,7 +9,13 @@ export async function getStaticPaths() {
 }
 
 const { note } = Astro.props;
-const { Content } = await render(note);
+const { Content, headings } = await render(note);
+// 長めの記事だけ、## と ### の見出しから目次を作る。
+// headings の text では数式が落ちるので、表示する文字は本文の見出し行から作る
+const lines = headingLines(note.body);
+const toc = note.data.long
+  ? headings.map((h, i) => ({ ...h, html: lines.length === headings.length ? inlineHtml(lines[i]) : h.text })).filter((h) => h.depth <= 3)
+  : [];
 ---
 <Base title={note.data.title}>
   <article data-pagefind-body>
@@ -18,6 +24,21 @@ const { Content } = await render(note);
       <time>{formatDate(note.data.date)}</time> · 約{readingMinutes(note.body)}分
       {note.data.tags.map((t) => <a class="tag" href={url(`/tags/${t}/`)} data-pagefind-filter="tag">#{t}</a>)}
     </p>
+    {toc.length > 0 && (
+      <nav class="toc" data-pagefind-ignore>
+        <p>目次</p>
+        <ul>
+          {toc.map((h) => <li class={`depth-${h.depth}`}><a href={`#${h.slug}`} set:html={h.html} /></li>)}
+        </ul>
+      </nav>
+    )}
     <Content />
   </article>
 </Base>
+
+<style>
+  .toc { margin: 1.5rem 0 2rem; padding: .75rem 1rem; border: 1px solid var(--border); border-radius: 8px; font-size: .9rem; }
+  .toc p { margin: 0 0 .25rem; color: var(--muted); font-weight: 600; }
+  .toc ul { margin: 0; padding-left: 1.2rem; }
+  .toc .depth-3 { margin-left: 1rem; }
+</style>

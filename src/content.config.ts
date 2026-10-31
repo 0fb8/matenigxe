@@ -8,6 +8,8 @@ const notes = defineCollection({
     date: z.coerce.date(),
     tags: z.array(z.string()).default([]),
     draft: z.boolean().default(false),
+    // 長めの記事。トップページの別枠に並べ、記事ページに目次を付ける
+    long: z.boolean().default(false),
   }),
 });
 
