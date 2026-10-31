@@ -8,6 +8,8 @@
 
 このリポジトリで Claude Code を起動し、`/note <知ったこと>` と打つと、対話のうえ記事を作って commit まで行う（push は手動）。手順とルールは `.claude/skills/note/SKILL.md`。
 
+見出しのある長めの記事は `/longnote <内容>` で作る（`long: true` 付き。手順は `.claude/skills/longnote/SKILL.md`）。
+
 手で書く場合:
 
 ```sh
