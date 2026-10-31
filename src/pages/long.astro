@@ -1,0 +1,11 @@
+---
+import Base from '../layouts/Base.astro';
+import NoteList from '../components/NoteList.astro';
+import { getNotes } from '../lib';
+const notes = (await getNotes()).filter((n) => n.data.long);
+---
+<Base title="長めの記事">
+  <h1>長めの記事</h1>
+  <p class="meta">{notes.length} 件</p>
+  <NoteList notes={notes} />
+</Base>
