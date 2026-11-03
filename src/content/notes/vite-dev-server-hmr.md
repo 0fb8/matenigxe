@@ -16,25 +16,53 @@ Vite は、今のブラウザが ES モジュール（`import` 文）を自分�
 
 まとめる作業がないので、ファイルの数が増えても起動は速いままだ。
 
-HMR（Hot Module Replacement）がこの仕組みでとくに効く。HMR は、ファイルを書き換えたときに、ページを再読み込みせず、変わったモジュールだけを動いているページの中で差し替える仕組みだ。入力欄の中身などの状態も残る。HMR は Vite の発明と思いがちだが、webpack にもあった。違うのは、webpack では差し替えのたびにバンドルの作り直しが要り、規模に応じて遅くなったことだ。Vite では変わったファイルを変換し直すだけなので、規模によらずすぐ反映される。エディタとブラウザを並べて、書き換えながら見た目を確かめる試行錯誤がしやすくなった。
+HMR（Hot Module Replacement）も、この仕組みの上で速く動く。HMR は、ファイルを書き換えたときに、ページを再読み込みせず、変わったモジュールだけを動いているページの中で差し替える仕組みだ。入力欄の中身などの状態も残る。Vite では変わったファイルだけを変換し直せばよいので、プロジェクトの規模によらずすぐ反映される。エディタとブラウザを並べて、書き換えながら見た目を確かめる試行錯誤がしやすい。
 
 本番向けの `vite build` では、読み込みの回数を減らすため、従来どおりバンドルと圧縮を行う。
 
-| | 開発中（`vite`） | 本番向け（`vite build`） |
+`vite` や `vite build` を直接打つことはあまりない。ふつうは `package.json` の `scripts` に登録しておき、npm 経由で呼ぶ。
+
+```json
+{
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  }
+}
+```
+
+| | 開発中 | 本番向け |
 | --- | --- | --- |
+| 打つコマンド | `npm run dev` | `npm run build` |
+| 実際に動くもの | `vite` | `vite build` |
 | バンドル | しない | する |
 | 目的 | 変更をすぐ反映する | 配信するファイルを少なく小さくする |
 
-Vite 本体がするのは基本的な変換だけで、ほかの処理はプラグインで足す。たとえば Vue の `.vue` ファイルを扱うには公式の `@vitejs/plugin-vue` を、React で状態を保った差し替え（Fast Refresh）を使うには `@vitejs/plugin-react` を入れる。
+`npm run` は `node_modules/.bin/` にパスを通してからコマンドを実行するので、Vite をプロジェクトに入れるだけで `vite` が使える。
+
+Vite 本体がするのは基本的な変換だけで、ほかの処理はプラグインで足す。たとえば Vue の `.vue` ファイルを扱うには、公式の `@vitejs/plugin-vue` を入れる。React で状態を保ったまま差し替える Fast Refresh を使うには、`@vitejs/plugin-react` を入れる。
+
+プラグインは、npm で配られているものを使うだけでなく、プロジェクトの中で自分で書くこともできる。プラグインは、`name` と、ビルドの決まった段階で呼ばれる関数（フック）を持ったオブジェクトにすぎない。`vite.config.ts` に直接書いて、「ビルドのときにこれをしたい」という処理を差し込める。
 
 ```ts
 // vite.config.ts
-import { defineConfig } from "vite";
+import { defineConfig, type Plugin } from "vite";
 import react from "@vitejs/plugin-react";
 
+// HTML の %BUILD_TIME% をビルドした時刻に置き換える自作プラグイン
+function buildTime(): Plugin {
+  return {
+    name: "build-time",
+    transformIndexHtml(html) {
+      return html.replace("%BUILD_TIME%", new Date().toISOString());
+    },
+  };
+}
+
 export default defineConfig({
-  plugins: [react()],
+  plugins: [react(), buildTime()],
 });
 ```
 
-ライブラリやフレームワークの開発者は、プラグインを作ることで、ビルドの途中に独自の変換を差し込める。
+フックには、各ファイルを変換する `transform`、ビルドの始まりと終わりに呼ばれる `buildStart` と `closeBundle`、開発サーバーに手を加える `configureServer` などがある。
