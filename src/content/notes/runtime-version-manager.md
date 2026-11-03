@@ -9,7 +9,7 @@ tags: [programming]
 この違いは、管理ツールが何で動いているかから来ている。
 
 - **uv は Rust 製**で、Python がなくても動く。だから Python 本体をダウンロードして入れたり、切り替えたりする役も引き受けられる。以前は pyenv という別のツールで Python のバージョンを管理していたが、uv を使うなら同じことが uv の中で済む。
-- **npm は Node.js で書かれている**ので、動かすにはまず Node.js が要る。npm で Node.js そのものを入れ替えようとすると、「Node.js を入れるための npm を動かすのに Node.js が要る」という堂々めぐりになり、扱いにくい。そのため Node.js のバージョン管理は、Node.js に頼らないツールに任されてきた。代表の nvm はシェルスクリプトで書かれている。
+- **npm は Node.js で書かれている**ので、動かすにはまず Node.js が要る。ところが、Node.js のバージョンを管理するツールは、Node.js をまだ入れていない状態でも動く必要がある。npm にこの役を持たせると、「Node.js を入れるための npm を動かすのに Node.js が要る」という堂々めぐりになってしまう。そのため、Node.js に頼らない nvm のような別のツールが使われている。nvm はシェルスクリプトで書かれている。
 
 ```sh
 # Python（uv）
@@ -21,13 +21,3 @@ nvm install 22
 nvm use 22              # .nvmrc に書いておけば nvm use だけで切り替わる
 ```
 
-Node.js でも、Node.js に依存しない作りにすれば、ランタイムの管理を取り込める。
-
-| ツール | 作り | できること |
-| --- | --- | --- |
-| nvm | シェルスクリプト | Node.js のバージョン管理だけ |
-| fnm・Volta | Rust 製 | Node.js（Volta は npm や yarn も）のバージョン管理 |
-| mise | Rust 製 | Node.js・Python など複数の言語のバージョン管理 |
-| pnpm | 単体の実行ファイルでも配布 | ライブラリ管理に加え、`pnpm env` で Node.js も切り替えられる |
-
-Volta は Rust 製なので、Node.js 版の uv のように見える。しかし実際には、Node.js と npm・yarn などのツールのバージョンを管理するもので、ライブラリの管理は npm などに任せる。ライブラリと Node.js 本体を1つで扱えるという点では、pnpm のほうが uv に近い。
