@@ -1,7 +1,7 @@
 ---
 title: "Claude はテキストを返すだけのモデルで、道具の実行と作業の記憶はエージェントハーネスの Claude Code が受け持つ"
 date: 2026-11-07
-tags: [programming]
+tags: [ai]
 ---
 
 Claude と Claude Code は別物だ。Claude は入力に対してテキストで応答する大規模言語モデル（LLM）で、Anthropic のサーバーや大手クラウドの上で動いている。Claude Code は利用者の手元で動くソフトで、Claude の代わりにファイル操作などを実行し、作業の経過を覚えておく。こうしたソフトをエージェントハーネスと呼ぶ。
