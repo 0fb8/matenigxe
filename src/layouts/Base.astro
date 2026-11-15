@@ -120,5 +120,13 @@ const siteName = site.name;
   img { max-width: 100%; }
   /* 横に長い数式は、ページごとではなく数式だけを横スクロールさせる */
   .katex-display { overflow-x: auto; overflow-y: hidden; }
+  /* 列の間をあけ、行を横線で区切り、セル内の行間を詰めて、折り返しが隣の列に続いて見えないようにする */
+  table { border-collapse: collapse; margin: 1.5rem 0; font-size: .95em; }
+  th, td {
+    padding: .5em .9em; text-align: left; vertical-align: top;
+    line-height: 1.55; border-bottom: 1px solid var(--border);
+  }
+  th { font-weight: 600; border-bottom: 2px solid var(--muted); white-space: nowrap; }
+  th:first-child, td:first-child { padding-left: 0; }
   blockquote { margin: 1rem 0; padding-left: 1rem; border-left: 3px solid var(--border); color: var(--muted); }
 </style>
